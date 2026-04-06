@@ -1,0 +1,77 @@
+import { DamageLevelLabel } from '../enums';
+import type { DamageRule } from '../types';
+
+export const DAMAGE_RULES: DamageRule[] = [
+  {
+    questionId: 'QI2',
+    answerValue: 'medium',
+    category: 'C',
+    damageLevelLabel: DamageLevelLabel.High,
+    damageLevelValue: 4,
+    note: 'Personal data significant impact.',
+  },
+  {
+    questionId: 'QI2',
+    answerValue: 'critical',
+    category: 'C',
+    damageLevelLabel: DamageLevelLabel.Critical,
+    damageLevelValue: 5,
+    note: 'Personal data ruinous impact.',
+  },
+  {
+    questionId: 'QI3',
+    answerValue: 'medium',
+    category: 'C',
+    damageLevelLabel: DamageLevelLabel.Medium,
+    damageLevelValue: 3,
+    note: 'IP moderately innovative.',
+  },
+  {
+    questionId: 'QI4',
+    answerValue: 'high',
+    category: 'F',
+    damageLevelLabel: DamageLevelLabel.High,
+    damageLevelValue: 4,
+    note: 'High financial damage.',
+  },
+  {
+    questionId: 'QI10',
+    answerValue: 'critical',
+    category: 'A',
+    damageLevelLabel: DamageLevelLabel.Critical,
+    damageLevelValue: 5,
+    note: 'Life-threatening injury.',
+  },
+  {
+    questionId: 'QI6',
+    answerValue: 'high',
+    category: 'A',
+    damageLevelLabel: DamageLevelLabel.High,
+    damageLevelValue: 4,
+    note: 'Major disturbance.',
+  },
+  {
+    questionId: 'QI8',
+    answerValue: 'high',
+    category: 'I',
+    damageLevelLabel: DamageLevelLabel.High,
+    damageLevelValue: 4,
+    note: 'Major destruction/asset impact.',
+  },
+  {
+    questionId: 'QI12',
+    answerValue: 'medium',
+    category: 'A',
+    damageLevelLabel: DamageLevelLabel.Medium,
+    damageLevelValue: 3,
+    note: 'Environmental damage moderate.',
+  },
+  {
+    questionId: 'QI12',
+    answerValue: 'critical',
+    category: 'A',
+    damageLevelLabel: DamageLevelLabel.Critical,
+    damageLevelValue: 5,
+    note: 'Environmental damage critical.',
+  },
+];
