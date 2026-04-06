@@ -376,6 +376,79 @@ export type QualityIndicator = {
 export type MitigationSelection = {
   attackStepId: string;
   rawInput?: string;
+  parsedItems?: MitigationParsedItem[];
+  validationErrors?: string[];
+};
+
+export type MitigationParsedCountermeasure = {
+  kind: 'countermeasure';
+  id: string;
+  forcedMinimumRap?: RapLevel;
+  raw: string;
+};
+
+export type MitigationParsedAssumption = {
+  kind: 'assumption';
+  id: string;
+  raw: string;
+};
+
+export type MitigationParsedItem = MitigationParsedCountermeasure | MitigationParsedAssumption;
+
+export type MitigationParseError = {
+  raw: string;
+  message: string;
+  index: number;
+};
+
+export type ForcedMinimumRap = RapLevel | null;
+
+export type NetRapResult = {
+  netRapSum: number;
+  netRapLevel: RapLevel;
+  netRapNumericRank: number;
+  factors: EaseFactorSet;
+};
+
+export type NetRiskRow = {
+  riskId: string;
+  damageScenarioId: string;
+  baseRiskLevel: RiskLevel;
+  netRiskLevel: RiskLevel;
+  netRiskLevelValue: RiskLevelValue;
+  rapLevel: RapLevel;
+  netRapLevel: RapLevel;
+  netRapSum: number;
+};
+
+export type MitigationValidationResult = {
+  attackStepId: string;
+  issues: string[];
+};
+
+export type MitigationRow = {
+  attackStepId: string;
+  attackStepTitle: string;
+  active: boolean;
+  proposedCountermeasureIds: string[];
+  proposedAssumptionIds: string[];
+  additionalAssumptionIds: string[];
+  rawInput: string;
+  parsedItems: MitigationParsedItem[];
+  parseErrors: MitigationParseError[];
+  baseRapLevel: RapLevel;
+  baseRapSum: number;
+  netRapLevel: RapLevel;
+  netRapSum: number;
+  affectedRiskIds: string[];
+  highestRemainingRisk: RiskLevel | null;
+  notes: string;
+  netRiskRows: NetRiskRow[];
+};
+
+export type MitigationComputationResult = {
+  rows: MitigationRow[];
+  validationIssues: MitigationValidationResult[];
 };
 
 export type RiskTreatmentEntry = {

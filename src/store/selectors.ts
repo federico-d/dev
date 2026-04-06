@@ -9,6 +9,7 @@ import { ValidationSeverity } from '../domain/enums';
 import { computeDamageCategories, computeDamageScenarios } from '../domain/engines/damage-engine';
 import { computeAttackStepInstances } from '../domain/engines/activation-engine';
 import { computeRiskRows } from '../domain/engines/risk-engine';
+import { computeMitigationRows } from '../domain/engines/mitigation-engine';
 import {
   computeMetadataCompleteness,
   computeQualityIndicators,
@@ -17,6 +18,7 @@ import {
 import type {
   AttackStepRapResult,
   AnalysisStoreState,
+  MitigationRow,
   MetadataState,
   PreliminaryRiskRow,
   QuestionnaireAnswer,
@@ -239,6 +241,63 @@ export function selectRiskRowsByDamageScenario(state: AnalysisStoreState) {
     acc[row.damageScenarioId].push(row);
     return acc;
   }, {});
+}
+
+export function selectMitigationRows(state: AnalysisStoreState): MitigationRow[] {
+  const riskRows = selectRiskRows(state);
+  const attackStepInstances = selectAttackStepInstances(state);
+  return computeMitigationRows(
+    attackStepInstances,
+    riskRows,
+    state.mitigations.byAttackStepId,
+    { countermeasures: COUNTERMEASURES_CATALOG, assumptions: ASSUMPTIONS_CATALOG },
+  ).rows;
+}
+
+export function selectMitigationRowByAttackStep(state: AnalysisStoreState, attackStepId: string) {
+  return selectMitigationRows(state).find((row) => row.attackStepId === attackStepId) ?? null;
+}
+
+export function selectNetRiskRows(state: AnalysisStoreState) {
+  return selectMitigationRows(state).flatMap((row) => row.netRiskRows.map((risk) => ({ ...risk, attackStepId: row.attackStepId })));
+}
+
+export function selectHighestRemainingRiskByAttackStep(state: AnalysisStoreState) {
+  return Object.fromEntries(selectMitigationRows(state).map((row) => [row.attackStepId, row.highestRemainingRisk]));
+}
+
+export function selectMitigationValidationIssues(state: AnalysisStoreState) {
+  const riskRows = selectRiskRows(state);
+  const attackStepInstances = selectAttackStepInstances(state);
+  return computeMitigationRows(
+    attackStepInstances,
+    riskRows,
+    state.mitigations.byAttackStepId,
+    { countermeasures: COUNTERMEASURES_CATALOG, assumptions: ASSUMPTIONS_CATALOG },
+  ).validationIssues;
+}
+
+export function selectMitigationSummary(state: AnalysisStoreState) {
+  const rows = selectMitigationRows(state);
+  const issues = selectMitigationValidationIssues(state);
+  const netRapDistribution = rows.reduce<Record<string, number>>((acc, row) => {
+    acc[row.netRapLevel] = (acc[row.netRapLevel] ?? 0) + 1;
+    return acc;
+  }, {});
+
+  return {
+    totalAttackSteps: rows.length,
+    activeAttackSteps: rows.filter((row) => row.active).length,
+    mitigatedAttackSteps: rows.filter((row) => row.rawInput.trim().length > 0).length,
+    parseErrorCount: rows.reduce((sum, row) => sum + row.parseErrors.length, 0),
+    highestRemainingRiskPresent: rows
+      .map((row) => row.highestRemainingRisk)
+      .filter(Boolean)
+      .sort()
+      .slice(-1)[0] ?? null,
+    netRapDistribution,
+    validationIssueCount: issues.reduce((sum, issue) => sum + issue.issues.length, 0),
+  };
 }
 
 export function selectDamageScenarios(state: AnalysisStoreState) {

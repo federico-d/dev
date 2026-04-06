@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import type { AnalysisSnapshot, AnalysisStoreState, MetadataState } from '../domain/types';
+import type { AnalysisSnapshot, AnalysisStoreState, MetadataState, MitigationSelection } from '../domain/types';
 import { PERSIST_KEY } from './persist';
 
 type AnalysisActions = {
@@ -12,6 +12,9 @@ type AnalysisActions = {
   setQuestionAnswer1: (questionId: string, value: string) => void;
   setQuestionAnswer2: (questionId: string, value: string) => void;
   setQuestionRationale: (questionId: string, value: string) => void;
+  setMitigationRawInput: (attackStepId: string, rawInput: string) => void;
+  clearMitigation: (attackStepId: string) => void;
+  patchMitigationEntry: (attackStepId: string, partial: Partial<MitigationSelection>) => void;
   resetAnalysis: () => void;
   loadSnapshot: (snapshot: AnalysisSnapshot) => void;
 };
@@ -98,6 +101,43 @@ export const useAnalysisStore = create<AnalysisStore>()(
               byId: {
                 ...state.questionnaire.byId,
                 [questionId]: { ...state.questionnaire.byId[questionId], questionId, rationale: value },
+              },
+            },
+            analysisMeta: { ...state.analysisMeta, updatedAt: now(), dirty: true },
+          })),
+        setMitigationRawInput: (attackStepId, rawInput) =>
+          set((state) => ({
+            mitigations: {
+              byAttackStepId: {
+                ...state.mitigations.byAttackStepId,
+                [attackStepId]: {
+                  ...state.mitigations.byAttackStepId[attackStepId],
+                  attackStepId,
+                  rawInput,
+                },
+              },
+            },
+            analysisMeta: { ...state.analysisMeta, updatedAt: now(), dirty: true },
+          })),
+        clearMitigation: (attackStepId) =>
+          set((state) => {
+            const next = { ...state.mitigations.byAttackStepId };
+            delete next[attackStepId];
+            return {
+              mitigations: { byAttackStepId: next },
+              analysisMeta: { ...state.analysisMeta, updatedAt: now(), dirty: true },
+            };
+          }),
+        patchMitigationEntry: (attackStepId, partial) =>
+          set((state) => ({
+            mitigations: {
+              byAttackStepId: {
+                ...state.mitigations.byAttackStepId,
+                [attackStepId]: {
+                  ...state.mitigations.byAttackStepId[attackStepId],
+                  attackStepId,
+                  ...partial,
+                },
               },
             },
             analysisMeta: { ...state.analysisMeta, updatedAt: now(), dirty: true },
