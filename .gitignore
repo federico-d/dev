@@ -17,3 +17,6 @@ asterisk
 libsqliteodbc
 system-config
 libcoredumper
+node_modules/
+dist/
+*.tsbuildinfo
