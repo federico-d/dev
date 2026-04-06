@@ -5,6 +5,7 @@ import {
   QA18_SECURE_PRODUCTION_SCALE,
   QA19_SUPPLY_CHAIN_TRUST_SCALE,
   RAP_THRESHOLDS,
+  RISK_LEVELS,
 } from '../../domain/catalogs/definitions';
 import { DefinitionTable } from '../../components/definitions/DefinitionTable';
 import { RiskMatrixTable } from '../../components/definitions/RiskMatrixTable';
@@ -28,6 +29,15 @@ export function DefinitionsPage() {
         ]}
         rows={RAP_THRESHOLDS}
         title="RAP Thresholds"
+      />
+
+      <DefinitionTable
+        columns={[
+          { key: "index", label: "Value" },
+          { key: "label", label: "Risk level" },
+        ]}
+        rows={RISK_LEVELS.map((label, index) => ({ index, label }))}
+        title="Risk Levels"
       />
 
       <RiskMatrixTable />

@@ -1,3 +1,4 @@
+import { QUESTIONS_CATALOG } from '../../domain/catalogs/questions';
 import type { QuestionDefinition, QuestionKind } from '../../domain/types';
 
 type Props = {
@@ -8,6 +9,10 @@ type Props = {
   onSectionFilterChange: (value: string) => void;
 };
 
+function formatOptions(question: QuestionDefinition) {
+  return question.answer1Options.map((option) => option.label).join(' | ');
+}
+
 export function QuestionsCatalogTable({
   questions,
   kindFilter,
@@ -15,7 +20,7 @@ export function QuestionsCatalogTable({
   onKindFilterChange,
   onSectionFilterChange,
 }: Props) {
-  const sections = Array.from(new Set(questions.map((question) => question.section))).sort();
+  const sections = Array.from(new Set(QUESTIONS_CATALOG.map((question) => question.section))).sort();
 
   return (
     <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
@@ -55,23 +60,28 @@ export function QuestionsCatalogTable({
           <thead>
             <tr className="bg-slate-100">
               <th className="px-3 py-2 text-left">ID</th>
-              <th className="px-3 py-2 text-left">Kind</th>
+              <th className="px-3 py-2 text-left">Text</th>
               <th className="px-3 py-2 text-left">Section</th>
-              <th className="px-3 py-2 text-left">Title</th>
+              <th className="px-3 py-2 text-left">Kind</th>
               <th className="px-3 py-2 text-left">Answer Type</th>
-              <th className="px-3 py-2 text-left">Has Answer2</th>
-              <th className="px-3 py-2 text-left">Details Rule</th>
-              <th className="px-3 py-2 text-left">Rationale Rule</th>
+              <th className="px-3 py-2 text-left">Option set</th>
+              <th className="px-3 py-2 text-left">Has A2</th>
+              <th className="px-3 py-2 text-left">Details rule</th>
+              <th className="px-3 py-2 text-left">Rationale rule</th>
             </tr>
           </thead>
           <tbody>
             {questions.map((question) => (
-              <tr key={question.id} className="border-t border-slate-200">
+              <tr key={question.id} className="border-t border-slate-200 align-top">
                 <td className="px-3 py-2 font-medium">{question.id}</td>
-                <td className="px-3 py-2">{question.kind}</td>
+                <td className="px-3 py-2">
+                  {question.title}
+                  {question.additionalQuestionText && <div className="text-xs text-slate-600">{question.additionalQuestionText}</div>}
+                </td>
                 <td className="px-3 py-2">{question.section}</td>
-                <td className="px-3 py-2">{question.title}</td>
+                <td className="px-3 py-2">{question.kind}</td>
                 <td className="px-3 py-2">{question.answer1Type}</td>
+                <td className="px-3 py-2">{formatOptions(question)}</td>
                 <td className="px-3 py-2">{question.hasAnswer2 ? 'Yes' : 'No'}</td>
                 <td className="px-3 py-2">{question.detailsRequiredWhen.length > 0 ? 'Configured' : '—'}</td>
                 <td className="px-3 py-2">{question.rationaleRequiredWhen.length > 0 ? 'Configured' : '—'}</td>

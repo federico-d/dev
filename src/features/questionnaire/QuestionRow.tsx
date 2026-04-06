@@ -54,17 +54,19 @@ export function QuestionRow({
   return (
     <article className="rounded border border-slate-200 bg-white p-4 shadow-sm">
       <h4 className="font-semibold text-slate-900">{question.id}</h4>
-      <p className="mb-3 text-sm text-slate-700">{question.title}</p>
+      <p className="mb-1 text-sm text-slate-700">{question.title}</p>
+      {question.additionalQuestionText && <p className="mb-2 text-xs text-slate-600">{question.additionalQuestionText}</p>}
+      {question.instructions && <p className="mb-3 rounded bg-slate-50 px-2 py-1 text-xs text-slate-700">{question.instructions}</p>}
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <label className="flex flex-col gap-1">
-          <span className="text-xs font-semibold uppercase text-slate-600">Answer 1</span>
+          <span className="text-xs font-semibold uppercase text-slate-600">Answer</span>
           {renderInput(question.answer1Type, value?.answer1 ?? '', onAnswer1Change, question.answer1Options)}
         </label>
 
         {question.hasAnswer2 && (
           <label className="flex flex-col gap-1">
-            <span className="text-xs font-semibold uppercase text-slate-600">{question.answer2Label ?? 'Answer 2'}</span>
+            <span className="text-xs font-semibold uppercase text-slate-600">{question.answer2Label}</span>
             <input
               className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
               onChange={(event) => onAnswer2Change(event.target.value)}

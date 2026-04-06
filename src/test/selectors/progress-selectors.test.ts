@@ -52,14 +52,14 @@ describe('progress selectors', () => {
     const byId = {
       QI1: { questionId: 'QI1', answer1: 'low' },
       QA1: { questionId: 'QA1', answer1: 'yes' },
-      QA21: { questionId: 'QA21', answer1: '5' },
+      QA21: { questionId: 'QA21', answer1: '10' },
     };
 
     const result = selectQuestionnaireProgress(byId);
-    expect(result.totalCount).toBe(37);
+    expect(result.totalCount).toBe(39);
     expect(result.answeredCount).toBe(3);
     expect(result.bySection['Impact / Confidentiality'].answered).toBe(1);
-    expect(result.bySection['Architecture / Lifecycle'].answered).toBe(1);
+    expect(result.bySection['Architecture / Supply Chain & Lifecycle'].answered).toBe(1);
   });
 
   it('returns quality indicators from state', () => {

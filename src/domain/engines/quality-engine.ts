@@ -15,26 +15,40 @@ type QualityCatalogs = {
   questions: QuestionDefinition[];
 };
 
-function matchesCondition(answer1: string, conditions: QuestionCondition[]) {
+function getAnswer1(state: AnalysisStoreState, currentQuestionId: string, condition: QuestionCondition): string {
+  const targetQuestionId = condition.questionId ?? currentQuestionId;
+  return state.questionnaire.byId[targetQuestionId]?.answer1?.trim() ?? '';
+}
+
+function matchesCondition(state: AnalysisStoreState, currentQuestionId: string, condition: QuestionCondition) {
+  const answer1 = getAnswer1(state, currentQuestionId, condition);
+  const expected = condition.value;
+
+  switch (condition.operator) {
+    case 'always':
+      return true;
+    case 'notEmptyAnswer1':
+      return Boolean(answer1);
+    case 'equalsAnswer1':
+    case 'equals':
+      return answer1 === String(expected ?? '');
+    case 'notEquals':
+      return answer1 !== String(expected ?? '');
+    case 'in':
+      return Array.isArray(expected) && expected.includes(answer1);
+    case 'notEqualsOrMissing':
+      return !answer1 || answer1 !== String(expected ?? '');
+    default:
+      return false;
+  }
+}
+
+function matchesAnyCondition(state: AnalysisStoreState, questionId: string, conditions: QuestionCondition[]) {
   if (conditions.length === 0) {
     return false;
   }
 
-  return conditions.some((condition) => {
-    if (condition.operator === 'always') {
-      return true;
-    }
-
-    if (condition.operator === 'notEmptyAnswer1') {
-      return Boolean(answer1.trim());
-    }
-
-    if (condition.operator === 'equalsAnswer1') {
-      return answer1 === (condition.value ?? '');
-    }
-
-    return false;
-  });
+  return conditions.some((condition) => matchesCondition(state, questionId, condition));
 }
 
 function parseComparableNumber(value?: string): number | null {
@@ -87,7 +101,7 @@ export function computeQuestionValidation(
     });
   }
 
-  if (matchesCondition(answer1, question.detailsRequiredWhen) && !answer2) {
+  if (matchesAnyCondition(state, questionId, question.detailsRequiredWhen) && !answer2) {
     messages.push({
       id: `${questionId}-details-missing`,
       severity: ValidationSeverity.Warning,
@@ -96,7 +110,7 @@ export function computeQuestionValidation(
     });
   }
 
-  if (matchesCondition(answer1, question.rationaleRequiredWhen) && !rationale) {
+  if (matchesAnyCondition(state, questionId, question.rationaleRequiredWhen) && !rationale) {
     messages.push({
       id: `${questionId}-rationale-missing`,
       severity: ValidationSeverity.Warning,
@@ -143,17 +157,13 @@ export function computeQualityIndicators(state: AnalysisStoreState, catalogs: Qu
   );
 
   const detailsMissingQuestions = catalogs.questions.filter((question) => {
-    const answer = state.questionnaire.byId[question.id];
-    const answer1 = answer?.answer1?.trim() ?? '';
-    const answer2 = answer?.answer2?.trim() ?? '';
-    return matchesCondition(answer1, question.detailsRequiredWhen) && !answer2;
+    const answer2 = state.questionnaire.byId[question.id]?.answer2?.trim() ?? '';
+    return matchesAnyCondition(state, question.id, question.detailsRequiredWhen) && !answer2;
   });
 
   const rationaleMissingQuestions = catalogs.questions.filter((question) => {
-    const answer = state.questionnaire.byId[question.id];
-    const answer1 = answer?.answer1?.trim() ?? '';
-    const rationale = answer?.rationale?.trim() ?? '';
-    return matchesCondition(answer1, question.rationaleRequiredWhen) && !rationale;
+    const rationale = state.questionnaire.byId[question.id]?.rationale?.trim() ?? '';
+    return matchesAnyCondition(state, question.id, question.rationaleRequiredWhen) && !rationale;
   });
 
   const qa2 = state.questionnaire.byId.QA2?.answer1?.trim() ?? '';

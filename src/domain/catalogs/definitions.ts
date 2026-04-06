@@ -21,7 +21,7 @@ export const RISK_LEVELS = [
   RiskLevelLabel.Moderate,
   RiskLevelLabel.High,
   RiskLevelLabel.VeryHigh,
-] as const;
+];
 
 export const RAP_THRESHOLDS: RapThresholdDefinition[] = [
   { min: 0, level: RapLevel.Basic, rank: 0 },
@@ -34,11 +34,11 @@ export const RAP_THRESHOLDS: RapThresholdDefinition[] = [
 export const RAP_LEVELS: RapLevel[] = RAP_THRESHOLDS.map((threshold) => threshold.level);
 
 const matrixRows: RiskLevelLabel[][] = [
-  [RiskLevelLabel.Low, RiskLevelLabel.Moderate, RiskLevelLabel.High, RiskLevelLabel.VeryHigh, RiskLevelLabel.VeryHigh],
+  [RiskLevelLabel.Low, RiskLevelLabel.High, RiskLevelLabel.High, RiskLevelLabel.VeryHigh, RiskLevelLabel.VeryHigh],
   [RiskLevelLabel.Low, RiskLevelLabel.Moderate, RiskLevelLabel.High, RiskLevelLabel.VeryHigh, RiskLevelLabel.VeryHigh],
   [RiskLevelLabel.Low, RiskLevelLabel.Moderate, RiskLevelLabel.High, RiskLevelLabel.High, RiskLevelLabel.VeryHigh],
-  [RiskLevelLabel.Moderate, RiskLevelLabel.High, RiskLevelLabel.High, RiskLevelLabel.VeryHigh, RiskLevelLabel.VeryHigh],
-  [RiskLevelLabel.Moderate, RiskLevelLabel.High, RiskLevelLabel.High, RiskLevelLabel.High, RiskLevelLabel.High],
+  [RiskLevelLabel.Low, RiskLevelLabel.Moderate, RiskLevelLabel.Moderate, RiskLevelLabel.High, RiskLevelLabel.VeryHigh],
+  [RiskLevelLabel.Low, RiskLevelLabel.Low, RiskLevelLabel.Moderate, RiskLevelLabel.Moderate, RiskLevelLabel.High],
 ];
 
 const RISK_LEVEL_TO_VALUE: Record<RiskLevelLabel, 0 | 1 | 2 | 3 | 4> = {
@@ -104,15 +104,19 @@ export const EASE_SCALES = {
 };
 
 export const QA18_SECURE_PRODUCTION_SCALE = [
-  { value: 'none', label: 'No secure production controls' },
-  { value: 'basic', label: 'Basic secure production controls' },
-  { value: 'managed', label: 'Managed secure production controls' },
-  { value: 'certified', label: 'Certified secure production controls' },
+  { value: 'no-protection', label: 'No protection' },
+  { value: 'internal-access-control', label: 'Internal production — only access control' },
+  { value: 'internal-it-requirements', label: 'Internal production according to IT requirements' },
+  { value: 'internal-validated', label: 'Internal validated production' },
+  { value: 'certified-production', label: 'Certified production' },
+  { value: 'software-cicd-pipeline', label: 'Software: CI/CD Pipeline' },
+  { value: 'software-internal-audit', label: 'Software: Internal Audit' },
+  { value: 'software-iso-certified', label: 'Software: ISO-certified' },
 ];
 
 export const QA19_SUPPLY_CHAIN_TRUST_SCALE = [
-  { value: 'unknown', label: 'Unknown supply chain trust' },
-  { value: 'partial', label: 'Partially trusted supply chain' },
-  { value: 'trusted', label: 'Trusted supply chain' },
-  { value: 'highly-trusted', label: 'Highly trusted and audited supply chain' },
+  { value: 'trusted-with-updates', label: 'Yes — Supplier trusted, will provide updates' },
+  { value: 'trusted-no-updates', label: 'Yes — Supplier trusted, no updates' },
+  { value: 'not-trusted', label: 'No — At least one supplier not trusted' },
+  { value: 'na-no-supplier', label: 'N/A — Not applicable (no supplier)' },
 ];

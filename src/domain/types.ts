@@ -98,19 +98,23 @@ export type QuestionConditionGroup = {
 
 export type QuestionDefinition = {
   id: string;
+  workbookOrder: number;
   kind: QuestionKind;
   group: string;
   section: string;
-  order: number;
   title: string;
+  additionalQuestionText?: string;
+  instructions?: string;
   answer1Type: QuestionAnswerType;
   answer1Options: QuestionOption[];
   hasAnswer2: boolean;
-  answer2Label: string | null;
-  answer2Type: QuestionAnswerType | null;
-  answer2Options: QuestionOption[];
+  answer2Label?: string | null;
+  answer2Type?: QuestionAnswerType | null;
+  answer2Options?: QuestionOption[];
   detailsRequiredWhen: QuestionCondition[];
   rationaleRequiredWhen: QuestionCondition[];
+  sourceSheet: string;
+  workbookNotes?: string;
 };
 
 export type QuestionnaireAnswer = {

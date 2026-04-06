@@ -20,7 +20,7 @@ export function QuestionnaireSectionRenderer() {
       {QUESTION_SECTIONS_ORDER.map((sectionLabel) => {
         const [group, section] = sectionLabel.split(' / ');
         const questions = QUESTIONS_CATALOG.filter((q) => q.group === group && q.section === section).sort(
-          (a, b) => a.order - b.order,
+          (a, b) => a.workbookOrder - b.workbookOrder,
         );
 
         if (questions.length === 0) {

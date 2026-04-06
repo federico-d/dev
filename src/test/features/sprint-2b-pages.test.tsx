@@ -23,8 +23,8 @@ describe('Sprint 2B pages', () => {
     expect(screen.queryByText('QI1')).not.toBeInTheDocument();
     expect(screen.getByText('QA1')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByLabelText('Section'), { target: { value: 'Lifecycle' } });
-    expect(screen.getByText('QA16')).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText('Section'), { target: { value: 'Supply Chain & Lifecycle' } });
+    expect(screen.getByText('QA20')).toBeInTheDocument();
     expect(screen.queryByText('QA1')).not.toBeInTheDocument();
   });
 

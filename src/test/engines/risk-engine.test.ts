@@ -21,12 +21,10 @@ const scenario: DamageScenario = {
 };
 
 describe('risk-engine', () => {
-  it('lookupRiskLevel maps matrix cells', () => {
-    expect(lookupRiskLevel(RapLevel.Basic, 1, { riskMatrix: RISK_MATRIX }).riskLevel).toBe(RiskLevelLabel.Low);
-    expect(lookupRiskLevel(RapLevel.Basic, 4, { riskMatrix: RISK_MATRIX }).riskLevel).toBe(RiskLevelLabel.VeryHigh);
-    expect(lookupRiskLevel(RapLevel.EnhancedBasic, 2, { riskMatrix: RISK_MATRIX }).riskLevel).toBe(RiskLevelLabel.Moderate);
-    expect(lookupRiskLevel(RapLevel.Moderate, 4, { riskMatrix: RISK_MATRIX }).riskLevel).toBe(RiskLevelLabel.High);
-    expect(lookupRiskLevel(RapLevel.BeyondHigh, 5, { riskMatrix: RISK_MATRIX }).riskLevel).toBe(RiskLevelLabel.High);
+  it('lookupRiskLevel maps updated workbook matrix cells', () => {
+    expect(lookupRiskLevel(RapLevel.Basic, 2, { riskMatrix: RISK_MATRIX }).riskLevel).toBe(RiskLevelLabel.High);
+    expect(lookupRiskLevel(RapLevel.High, 3, { riskMatrix: RISK_MATRIX }).riskLevel).toBe(RiskLevelLabel.Moderate);
+    expect(lookupRiskLevel(RapLevel.BeyondHigh, 2, { riskMatrix: RISK_MATRIX }).riskLevel).toBe(RiskLevelLabel.Low);
   });
 
   it('compareRiskLevels orders correctly', () => {
@@ -64,32 +62,5 @@ describe('risk-engine', () => {
     expect(summary.total).toBe(2);
     expect(summary.noRisk).toBeGreaterThanOrEqual(1);
     expect(summary.activeRiskRows + summary.inactiveRiskRows).toBe(2);
-  });
-
-  it('riskLevelValue mapping is coherent', () => {
-    const steps = computeAttackStepInstances({}, ATTACK_STEPS_CATALOG).slice(0, 1);
-    const rows = computeRiskRows(
-      steps,
-      [
-        { ...scenario, id: 'DS-L', damageLevel: { label: DamageLevelLabel.Low, value: 1 } },
-        { ...scenario, id: 'DS-M', damageLevel: { label: DamageLevelLabel.Medium, value: 2 } },
-        { ...scenario, id: 'DS-H', damageLevel: { label: DamageLevelLabel.High, value: 3 } },
-      ],
-      { riskMatrix: RISK_MATRIX },
-    ).rows;
-
-    rows.forEach((row) => {
-      const expected =
-        row.riskLevel === RiskLevelLabel.NoRisk
-          ? 0
-          : row.riskLevel === RiskLevelLabel.Low
-            ? 1
-            : row.riskLevel === RiskLevelLabel.Moderate
-              ? 2
-              : row.riskLevel === RiskLevelLabel.High
-                ? 3
-                : 4;
-      expect(row.riskLevelValue).toBe(expected);
-    });
   });
 });

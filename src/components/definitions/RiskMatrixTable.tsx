@@ -3,7 +3,8 @@ import { DAMAGE_LEVELS, RAP_LEVELS, RISK_MATRIX } from '../../domain/catalogs/de
 export function RiskMatrixTable() {
   return (
     <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-      <h3 className="mb-3 text-base font-semibold text-slate-900">Risk Matrix (RAP x Damage Level)</h3>
+      <h3 className="mb-1 text-base font-semibold text-slate-900">Risk Matrix (RAP x Damage Level)</h3>
+      <p className="mb-3 text-xs text-slate-600">No Risk is not part of the matrix and is assigned only to inactive attack steps.</p>
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm">
           <thead>

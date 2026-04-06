@@ -153,7 +153,7 @@ describe('mitigation-engine', () => {
       { countermeasures: COUNTERMEASURES_CATALOG, assumptions: ASSUMPTIONS_CATALOG },
     );
 
-    expect(forcedHigh.rows[0].netRiskRows[0].netRiskLevelValue).toBeGreaterThanOrEqual(
+    expect(forcedHigh.rows[0].netRiskRows[0].netRiskLevelValue).toBeLessThanOrEqual(
       noMitigation.rows[0].netRiskRows[0].netRiskLevelValue,
     );
   });

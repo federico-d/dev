@@ -39,7 +39,7 @@ describe('quality-engine rules', () => {
   it('computes unanswered questions', () => {
     const state = makeState({ questionnaire: { byId: { QI1: { questionId: 'QI1', answer1: 'low' } } } });
     const indicator = computeQualityIndicators(state, catalogs).find((item) => item.id === 'QI-ANSWERS-MISSING');
-    expect(indicator?.count).toBe(36);
+    expect(indicator?.count).toBe(QUESTIONS_CATALOG.length - 1);
   });
 
   it('computes missing details', () => {
@@ -71,7 +71,7 @@ describe('quality-engine rules', () => {
     const state = makeState({
       questionnaire: {
         byId: {
-          QA20: { questionId: 'QA20', answer1: '8' },
+          QA20: { questionId: 'QA20', answer1: '15' },
           QA21: { questionId: 'QA21', answer1: '3' },
         },
       },
