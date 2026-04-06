@@ -1,0 +1,80 @@
+import type { DocumentationFieldDefinition } from '../types';
+
+export const DOCUMENTATION_FIELDS: DocumentationFieldDefinition[] = [
+  {
+    id: 'toeName',
+    label: 'TOE / Product Name',
+    group: 'core',
+    required: true,
+    fieldType: 'text',
+    placeholder: 'Nome del prodotto',
+    helpText: 'Identificativo principale del prodotto analizzato.',
+  },
+  {
+    id: 'author',
+    label: 'Author',
+    group: 'core',
+    required: true,
+    fieldType: 'text',
+    placeholder: 'Nome autore',
+    helpText: 'Responsabile della compilazione.',
+  },
+  {
+    id: 'pmContact',
+    label: 'PM Contact',
+    group: 'contacts',
+    required: true,
+    fieldType: 'email',
+    placeholder: 'pm@example.com',
+    helpText: 'Contatto project management.',
+  },
+  {
+    id: 'rdContact',
+    label: 'R&D Contact',
+    group: 'contacts',
+    required: true,
+    fieldType: 'email',
+    placeholder: 'rd@example.com',
+    helpText: 'Contatto tecnico R&D.',
+  },
+  {
+    id: 'css',
+    label: 'CSS',
+    group: 'core',
+    required: true,
+    fieldType: 'text',
+    placeholder: 'Cyber Security Strategy',
+    helpText: 'Riferimento strategia sicurezza.',
+  },
+  {
+    id: 'csts',
+    label: 'CSTS',
+    group: 'core',
+    required: true,
+    fieldType: 'text',
+    placeholder: 'Cyber Security Test Strategy',
+    helpText: 'Riferimento strategia di test sicurezza.',
+  },
+  {
+    id: 'version',
+    label: 'Release / Version',
+    group: 'release',
+    required: true,
+    fieldType: 'text',
+    placeholder: 'v1.0.0',
+    helpText: 'Versione dell’analisi/prodotto.',
+  },
+  {
+    id: 'changeHistory',
+    label: 'Change History',
+    group: 'release',
+    required: true,
+    fieldType: 'textarea',
+    placeholder: 'Descrizione modifiche principali',
+    helpText: 'Storico modifiche rilevanti.',
+  },
+];
+
+export const REQUIRED_DOCUMENTATION_FIELD_IDS = DOCUMENTATION_FIELDS.filter((field) => field.required).map(
+  (field) => field.id,
+);
