@@ -1,0 +1,53 @@
+import { RapLevel } from '../enums';
+import type { CountermeasureDefinition } from '../types';
+
+export const COUNTERMEASURES_CATALOG: CountermeasureDefinition[] = [
+  {
+    id: 'CM1',
+    name: 'Network segmentation and filtering',
+    reference: 'IEC 62443-3-3 SR 3.1',
+    stakeholder: 'Integrator',
+    type: 'Baseline',
+    description: 'Segment and filter traffic to reduce exposure.',
+    easeDelta: { elapsedTime: 1, expertise: 1, knowledgeOfToe: 0, windowOfOpportunity: 1, equipment: 0 },
+    forcedMinimumRap: null,
+    annexMappings: ['a', 'c'],
+    configFlags: { requiresOemConfiguration: false, incompleteInTemplate: false },
+  },
+  {
+    id: 'C27',
+    name: 'Signed update validation',
+    reference: 'ISO/IEC 30111',
+    stakeholder: 'Manufacturer',
+    type: 'CM',
+    description: 'Validate software updates using signature verification.',
+    easeDelta: { elapsedTime: 2, expertise: 1, knowledgeOfToe: 1, windowOfOpportunity: 1, equipment: 0 },
+    forcedMinimumRap: RapLevel.Moderate,
+    annexMappings: ['e', 'f'],
+    configFlags: { requiresOemConfiguration: false, incompleteInTemplate: false },
+  },
+  {
+    id: 'CM2a',
+    name: 'OEM-specific SDL governance',
+    reference: 'TODO-OEM',
+    stakeholder: 'Manufacturer',
+    type: 'Additional',
+    description: 'OEM-specific SDL control set requiring tenant/project configuration.',
+    easeDelta: { elapsedTime: 0, expertise: 0, knowledgeOfToe: 0, windowOfOpportunity: 0, equipment: 0 },
+    forcedMinimumRap: null,
+    annexMappings: ['b'],
+    configFlags: { requiresOemConfiguration: true, incompleteInTemplate: true },
+  },
+  {
+    id: 'C32',
+    name: 'Rate limiting for authentication endpoints',
+    reference: 'OWASP ASVS 2.1',
+    stakeholder: 'Developer',
+    type: 'CM',
+    description: 'Limit brute-force attempts on authentication interfaces.',
+    easeDelta: { elapsedTime: 2, expertise: 0, knowledgeOfToe: 0, windowOfOpportunity: 2, equipment: 0 },
+    forcedMinimumRap: RapLevel.EnhancedBasic,
+    annexMappings: ['g'],
+    configFlags: { requiresOemConfiguration: false, incompleteInTemplate: false },
+  },
+];
